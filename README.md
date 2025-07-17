@@ -83,8 +83,7 @@ Description: First-level administrative boundaries (10 regions of Ghana as defin
 
 Population Density Raster:
 
-Source: WorldPop (or similar global population data provider)
-
+Source: WorldPop 
 File: gha_pd_2020_1km.tif
 
 Description: 1-kilometer resolution raster estimating population density (people per square kilometer) for the year 2020.
