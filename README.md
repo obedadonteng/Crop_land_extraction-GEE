@@ -124,3 +124,154 @@ Data Export:
 Converts the sf object to a regular data frame (drops geometry).
 
 Saves the table to an Excel file using openxlsx::write.xlsx().
+
+
+
+# SPEI (climate indicater)
+
+This R script processes monthly SPEI (Standardized Precipitation Evapotranspiration Index) data from NetCDF files for Ghana’s administrative regions (GADM Level 1). It extracts mean SPEI values per region for each month, combines all monthly data, and then computes annual average SPEI by region.
+
+Purpose
+Extract drought indicator values (SPEI) at the regional level for Ghana.
+
+Aggregate monthly data into annual regional averages.
+
+Prepare clean, tabular datasets for further analysis or visualization.
+
+Inspect NetCDF metadata to understand the structure and attributes of the data files.
+
+📁 Data Inputs
+Administrative boundaries: GADM Level 1 shapefile for Ghana, stored in a geopackage (gadm36_GHA.gpkg).
+
+SPEI data: Monthly NetCDF files (.nc) located in a folder named drought within your main project folder.
+
+The script assumes a file naming convention containing the year and month in YYYYMM format (e.g., ...202001.area-subset.nc).
+
+
+🔁 Workflow Summary
+Workflow
+Setup and Data Loading
+
+Clear workspace.
+
+Load required libraries.
+
+Define folders for main data and SPEI NetCDF files.
+
+Load Ghana regional boundaries from the GADM geopackage.
+
+File Discovery and Date Parsing
+
+List all NetCDF files in the drought folder.
+
+Parse year and month from filenames using a regex-based function.
+
+Data Extraction Loop
+
+Loop over all NetCDF files.
+
+For each file:
+
+Load raster data.
+
+Extract mean SPEI value for each region.
+
+Append year, month, region, and SPEI to a list.
+
+Data Aggregation
+
+Combine monthly data into a single dataframe.
+
+Optionally save the full monthly data CSV.
+
+Compute average annual SPEI for each region.
+
+Export final aggregated CSV.
+
+NetCDF Metadata Inspection (Optional)
+
+Uses ncmeta and ncdf4 packages to examine the contents of a sample NetCDF file.
+
+Prints:
+
+Dimensions: to understand spatial/temporal extent.
+
+Variables: lists variables available in the file.
+
+Global attributes: metadata describing the dataset.
+
+Variable attributes: detailed info on SPEI variable, including units and other metadata.
+
+Calendar type: checks the calendar system used in the time dimension.
+
+This section helps verify the structure and content of NetCDF files before analysis.
+
+The metadata inspection is for understanding the NetCDF files.
+
+Output Files
+monthly_spei_by_region.csv — monthly SPEI values per region.
+
+ghana_region_yearly_spei.csv — average annual SPEI per region.
+
+
+# Harmonized Nighlight data 
+
+Description
+This Google Earth Engine (GEE) script extracts and harmonizes annual nighttime light (NTL) data over Ghana's old administrative boundaries (10 regions) for the years 2000 to 2020. It combines multiple NTL datasets (DMSP-OLS, harmonized VIIRS, and raw VIIRS) into a consistent time series and computes the average nighttime light intensity per region per year.
+
+📁 Data Inputs
+Ghana ADM1 boundaries (old 10 regions): FAO GAUL 2015 dataset.
+
+DMSP-OLS stable lights (2000–2013): Harmonized DMSP nighttime lights dataset.
+
+VIIRS harmonized monthly composites (2014–2018): Harmonized VIIRS nighttime lights dataset.
+
+Raw VIIRS monthly composites (2019–2020): Raw VIIRS monthly nighttime lights data from NOAA.
+
+Harmonization Approach
+Loads pre-harmonized DMSP (2000–2013) and VIIRS (2014–2018) nightlight datasets from sat-io's open data catalog.
+
+Loops through each year from 2000 to 2018:
+
+Picks the correct harmonized image for that year (DMSP or VIIRS).
+
+Extracts it and renames the band to ntl.
+
+Then applies a harmonization function to the raw VIIRS (2019–2020) to match the scale of the 2000–2018 harmonized dataset.
+
+This approach is approximate but useful for consistency across the entire time series.
+
+🔁 Workflow Summary
+
+Load Ghana ADM1 boundaries (old 10 regions) from FAO GAUL.
+
+Load harmonized DMSP and VIIRS NTL datasets, and raw VIIRS data.
+
+Define a harmonization function for raw VIIRS.
+
+Build yearly composites for each year from 2000 to 2020 by selecting the appropriate dataset.
+
+Compute the mean nighttime light value for each administrative region per year.
+
+Export the results as a CSV file to Google Drive.
+
+Output
+CSV file named harmonized_NTL_Ghana_ADM1_2000_2020_old_boundaries.csv containing mean NTL values per region per year.
+
+
+
+# Important Notes
+CRS Alignment: All the scripts checked coordinate reference systems (CRS) between the raster and vector data.Raster CRS: ID["EPSG",4326]; Vector CRS: GEOGCRS["WGS 84"]
+
+Adjust all file paths based on your local directory structure.
+
+Update folder and nc_folder variables to your local paths.
+
+Ensure all necessary R packages are installed (eg: terra, sf, dplyr, exactextractr, ncmeta, ncdf4).
+
+Run the script to process all SPEI NetCDF files in the specified folder.
+
+Review outputs in the designated folder.
+
+
+
