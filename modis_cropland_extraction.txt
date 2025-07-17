@@ -1,0 +1,36 @@
+// === 1. Load Ghana regions from FAO GAUL dataset ===
+var ghana_adm1 = ee.FeatureCollection("FAO/GAUL/2015/level1")
+                    .filter(ee.Filter.eq('ADM0_NAME', 'Ghana'));
+
+// === 2. Load MODIS Land Cover (MCD12Q1) ===
+var modisLC = ee.ImageCollection("MODIS/006/MCD12Q1")
+  .filterDate('2015-01-01', '2015-12-31')
+  .first()
+  .select('LC_Type1');  // IGBP classification scheme
+
+// === 3. Select cropland pixels (Class 12 in IGBP) ===
+var cropland = modisLC.eq(12);  // 12 = Croplands
+
+// === 4. Compute pixel area in km²
+var pixelArea = ee.Image.pixelArea().divide(1e6);
+var croplandArea = pixelArea.updateMask(cropland);  // mask non-cropland pixels
+
+// === 5. Reduce cropland area by ADM1 regions
+var stats = croplandArea.reduceRegions({
+  collection: ghana_adm1,
+  reducer: ee.Reducer.sum(),
+  scale: 500,
+  crs: 'EPSG:4326',
+});
+
+// === 6. Add 'cropland_km2' field and retain region info
+stats = stats.map(function(f) {
+  return f.set('cropland_km2', f.get('sum')).copyProperties(f);
+});
+
+// === 7. Export results to Google Drive
+Export.table.toDrive({
+  collection: stats,
+  description: 'Ghana_Cropland_Area_MODIS_2015',
+  fileFormat: 'CSV'
+});
