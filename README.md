@@ -116,7 +116,7 @@ Visualization:
 
 Uses ggplot2 and viridis to generate a choropleth map.
 
-Applies log1p() transformation (i.e., log(x + 1)) to handle skewed distributions and zero values.
+Only for visualization :Applies log1p() transformation (i.e., log(x + 1)) to handle skewed distributions and zero values.
 
 Adds titles, legends, and stylistic elements for clarity.
 
