@@ -1,11 +1,8 @@
 # Crop_land_extraction-GEE
-This Google Earth Engine (GEE) script estimates the cropland area (in square kilometers) for each first-level administrative region (ADM1) in Ghana for the year 2015. It uses the MODIS MCD12Q1 Land Cover dataset and regional boundaries from the FAO GAUL 2015 dataset.The included example uses data for 2015, but the method was applied from 2001 to 2020, with each year processed and downloaded individually.
-
-You can also manually uploaded the GADM 3.6 ADM1 shapefile to your GEE Assets to compare results (both boundary datasets reflect Ghana’s pre-2018 10-region structure).
+This Google Earth Engine (GEE) script estimates the cropland area (in square kilometers) for each first-level administrative region (ADM1) in Ghana for the year 2015. It uses the MODIS MCD12Q1 Land Cover dataset and regional boundaries from the GADM dataset.The included example uses data for 2015, but the method was applied from 2001 to 2020, with each year processed and downloaded individually.
 
 📁 Dataset Sources
-1. Administrative Boundaries
-a. FAO GAUL 2015(https://developers.google.com/earth-engine/datasets/catalog/FAO_GAUL_2015_level1)
+1. FAO GAUL 2015(https://developers.google.com/earth-engine/datasets/catalog/FAO_GAUL_2015_level1)
 Dataset: FAO/GAUL/2015/level1
 
 Description: ADM1 boundaries for Ghana as recognized by the FAO up to 2015.
@@ -14,16 +11,7 @@ Structure: Reflects 10 regions (pre-2018 structure).
 
 Use case: Historical consistency to align with other regional-level variables that are not easily disaggregated to the newer 16-region structure.
 
-b. GADM 3.6 (Manually Uploaded) (https://gadm.org/download_world36.html#google_vignette). Note that you may have challenges downloading the old shapefiles sometimes from this source
-Dataset: users/your_username/gadm36_GHA_1 (replace with your actual asset path) 
-
-Description: First-level administrative boundaries from GADM v3.6.
-
-Structure: Also reflects Ghana’s 10 regions, as GADM 3.6 predates the 2018 administrative reform.
-
-Purpose: You uploaded this to compare cropland estimates across boundary datasets.
-
-🔴 Note: Both GAUL and GADM 3.6 represent outdated regional structures and do not include the 6 new regions created in 2018 (for a total of 16).
+🔴 Note: GAUL 2015 represent outdated regional structures and do not include the 6 new regions created in 2018 (for a total of 16).
 
 2. Land Cover Classification
 Dataset: MODIS/006/MCD12Q1
