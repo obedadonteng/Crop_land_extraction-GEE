@@ -53,7 +53,7 @@ Adds a field called cropland_km2 with the result per region.
 Export to CSV
 Outputs results as a table to Google Drive.
 
-###################################################################
+****************************************************************
 Why Select Class 12?
 Class 12 = Croplands
 This class includes:Lands covered with herbaceous crops that are cultivated for food, fiber, or fuel. These areas are dominated by single-season crops and typically have clearly defined planting and harvesting seasons."
@@ -65,4 +65,63 @@ Excludes other land types such as: Grasslands (Class 10), Urban areas (Class 13)
 
 Calculate Area in km²
 Converts pixel values to actual area (sq km) based on resolution.
-##################################################################
+******************************************************************
+
+# Pop density extraction
+This R script computes and visualizes the average population density for each of Ghana's first-level administrative regions (ADM1) using gridded population raster data. It also exports the resulting statistics for further analysis.The provided script demonstrates the process using data for the year 2020, but the same approach was applied repeatedly for your full sample period (e.g., 2000 to 2020), processing one year at a time.
+
+📁 Data Inputs
+Administrative Boundaries:
+
+Source: GADM v3.6
+
+File: gadm36_GHA.gpkg
+
+Layer: gadm36_GHA_1
+
+Description: First-level administrative boundaries (10 regions of Ghana as defined pre-2018).
+
+Population Density Raster:
+
+Source: WorldPop (or similar global population data provider)
+
+File: gha_pd_2020_1km.tif
+
+Description: 1-kilometer resolution raster estimating population density (people per square kilometer) for the year 2020.
+
+🔁 Workflow Summary
+Environment Setup:
+
+Clears the R environment using rm(list = ls()).
+
+Loads required libraries for spatial data handling, raster analysis, plotting, and Excel export.
+
+Data Import:
+
+Loads vector boundary data using sf::st_read().
+
+Loads population raster using terra::rast().
+
+Coordinate Reference System (CRS) Check:
+
+Prints CRS for both raster and vector data to ensure they are compatible for spatial extraction.
+
+Spatial Analysis:
+
+Uses exactextractr::exact_extract() to calculate the mean population density within each ADM1 region.
+
+Stores the result in a new column (Pop_density) in the sf object.
+
+Visualization:
+
+Uses ggplot2 and viridis to generate a choropleth map.
+
+Applies log1p() transformation (i.e., log(x + 1)) to handle skewed distributions and zero values.
+
+Adds titles, legends, and stylistic elements for clarity.
+
+Data Export:
+
+Converts the sf object to a regular data frame (drops geometry).
+
+Saves the table to an Excel file using openxlsx::write.xlsx().
