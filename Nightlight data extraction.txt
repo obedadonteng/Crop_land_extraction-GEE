@@ -1,0 +1,60 @@
+// 1. Load old Ghana ADM1 boundaries (10 regions) from public FAO GAUL dataset
+var ghana_adm1 = ee.FeatureCollection("FAO/GAUL/2015/level1")
+  .filter(ee.Filter.eq('ADM0_NAME', 'Ghana'));
+
+// 2. Load harmonized DMSP (2000–2013)
+var dmsp = ee.ImageCollection("projects/sat-io/open-datasets/Harmonized_NTL/dmsp");
+
+// 3. Load harmonized VIIRS (2014–2018)
+var viirsHarmonized = ee.ImageCollection("projects/sat-io/open-datasets/Harmonized_NTL/viirs");
+
+// 4. Load raw VIIRS (2019–2020)
+var viirsRaw = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG")
+  .select('avg_rad');
+
+// 5. Define simple harmonization function for raw VIIRS
+function harmonizeVIIRS(image) {
+  return image.multiply(63.0 / 60.0).clamp(0, 63).rename('ntl');
+}
+
+// 6. Define year range
+var years = ee.List.sequence(2000, 2020);
+
+// 7. Build yearly composite images
+var yearlyImages = years.map(function(year) {
+  year = ee.Number(year);
+  var image = ee.Algorithms.If(
+    year.lte(2013),
+    dmsp.filter(ee.Filter.calendarRange(year, year, 'year')).first().rename('ntl'),
+    ee.Algorithms.If(
+      year.lte(2018),
+      viirsHarmonized.filter(ee.Filter.calendarRange(year, year, 'year')).first().rename('ntl'),
+      harmonizeVIIRS(
+        viirsRaw.filter(ee.Filter.calendarRange(year, year, 'year')).mean()
+      )
+    )
+  );
+  return ee.Image(image).set('year', year);
+});
+
+// 8. Convert to ImageCollection
+var yearlyCol = ee.ImageCollection.fromImages(yearlyImages);
+
+// 9. Compute mean nightlight per region per year
+var statsByYear = yearlyCol.map(function(img) {
+  var year = img.get('year');
+  return img.reduceRegions({
+    collection: ghana_adm1,
+    reducer: ee.Reducer.mean(),
+    scale: 500
+  }).map(function(feature) {
+    return feature.set('year', year);
+  });
+}).flatten();
+
+// 10. Export result to Google Drive
+Export.table.toDrive({
+  collection: statsByYear,
+  description: 'harmonized_NTL_Ghana_ADM1_2000_2020_old_boundaries',
+  fileFormat: 'CSV'
+});
