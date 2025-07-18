@@ -261,5 +261,7 @@ Run the script to process all SPEI NetCDF files in the specified folder.
 
 Review outputs in the designated folder.
 
+Importantly all the data  extracted were arranged manually/put together in a csv file. I didn't write any code to put them together
+
 
 
