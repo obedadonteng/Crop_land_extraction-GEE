@@ -1,11 +1,11 @@
 # Crop_land_extraction-GEE
 This Google Earth Engine (GEE) script estimates the cropland area (in square kilometers) for each first-level administrative region (ADM1) in Ghana for the year 2015. It uses the MODIS MCD12Q1 Land Cover dataset and regional boundaries from the GADM dataset.The included example uses data for 2015, but the method was applied from 2001 to 2020, with each year processed and downloaded individually.
 
-📁 Dataset Sources
-1. FAO GAUL 2015(https://developers.google.com/earth-engine/datasets/catalog/FAO_GAUL_2015_level1)
+📁 Dataset Inputs
+1. FAO GAUL 2015
 Dataset: FAO/GAUL/2015/level1
 
-Description: ADM1 boundaries for Ghana as recognized by the FAO up to 2015.
+Description: ADM1 boundaries for Ghana.
 
 Structure: Reflects 10 regions (pre-2018 structure).
 
