@@ -11,8 +11,6 @@ Structure: Reflects 10 regions (pre-2018 structure).
 
 Use case: Historical consistency to align with other regional-level variables that are not easily disaggregated to the newer 16-region structure.
 
-🔴 Note: GAUL 2015 represent outdated regional structures and do not include the 6 new regions created in 2018 (for a total of 16).
-
 2. Land Cover Classification
 Dataset: MODIS/006/MCD12Q1
 
@@ -67,7 +65,7 @@ File: gadm36_GHA.gpkg
 
 Layer: gadm36_GHA_1
 
-Description: First-level administrative boundaries (10 regions of Ghana as defined pre-2018).
+Description: Reflects 10 regions (pre-2018 structure).
 
 Population Density Raster:
 
